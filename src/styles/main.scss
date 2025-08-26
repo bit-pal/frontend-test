@@ -1,0 +1,1434 @@
+// Variables
+$color-primary: #3B3B3B;
+$color-white: #ffffff;
+$color-gray-50: #f9fafb;
+$color-gray-100: #f3f4f6;
+$color-gray-200: #e5e7eb;
+$color-gray-300: #d1d5db;
+$color-gray-400: #9ca3af;
+$color-gray-500: #6b7280;
+$color-gray-600: #4b5563;
+$color-gray-700: #374151;
+$color-gray-800: #1f2937;
+$color-red-500: #ef4444;
+$color-red-700: #b91c1c;
+
+$border-radius-sm: 0.375rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// Base styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// App component
+.app {
+  display: flex;
+  background-color: $color-gray-50;
+  font-family: sans-serif;
+  min-height: 100vh;
+}
+
+// Main content area
+.app__main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow-x: auto;
+  margin-left: 24rem; // 4rem (mini-bar) + 20rem (navigation) - increased ratio
+  max-width: calc(100vw - 24rem); // Prevent stretching beyond viewport
+}
+
+.app__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; // Increased max-width for better desktop experience
+  min-height: 756px;
+}
+
+// Responsive breakpoints
+@media (max-width: $breakpoint-lg) {
+  .app__main {
+    padding: 1rem;
+    align-items: center;
+    margin-left: 21rem; // 4rem + 17rem
+    max-width: calc(100vw - 21rem);
+  }
+  
+  .app__content {
+    padding: 20px 0px 14px;
+    gap: 24px;
+    align-items: center;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .app__main {
+    padding: 0.5rem;
+    align-items: center;
+    margin-left: 18rem; // 4rem + 14rem
+    max-width: calc(100vw - 18rem);
+  }
+  
+  .app__content {
+    padding: 16px 0px 12px;
+    gap: 20px;
+    align-items: center;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .app__main {
+    padding: 0.5rem;
+    padding-top: 4rem; // Account for mobile menu toggle
+    align-items: center;
+    margin-left: 0; // No margin on mobile, sidebar is overlay
+    max-width: 100vw;
+  }
+  
+  .app__content {
+    padding: 12px 0px 10px;
+    gap: 16px;
+    align-items: center;
+    max-width: 100%;
+  }
+}
+
+// Sidebar component
+.sidebar {
+  display: flex;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+
+  &__mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 60;
+    background-color: $color-primary;
+    color: $color-white;
+    border: none;
+    border-radius: $border-radius-md;
+    padding: 0.5rem;
+    cursor: pointer;
+    box-shadow: $shadow-lg;
+
+    &:hover {
+      background-color: $color-gray-700;
+    }
+  }
+
+  &__mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 55;
+  }
+
+  &__mini-bar {
+    width: 4rem;
+    background-color: $color-primary;
+    color: $color-white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+  }
+
+  &__mini-bar-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__mini-bar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: $color-gray-400;
+    font-size: 0.75rem;
+  }
+
+  &__logo,
+  &__account {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__account {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  &__mini-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      color: $color-gray-300;
+    }
+
+    &--settings,
+    &--logout {
+      &:hover {
+        color: $color-white;
+      }
+    }
+  }
+
+  &__navigation {
+    width: 20rem;
+    background-color: $color-white;
+    border-right: 1px solid $color-gray-200;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  &__header {
+    padding: 1.5rem;
+    padding-bottom: 0rem;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin: 0 0 0.25rem 0;
+  }
+
+  &__subtitle {
+    color: $color-gray-500;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  &__nav-separator {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 1.5rem 1.5rem;
+    border: none;
+    width: auto;
+  }
+
+  &__nav-buttons {
+    margin-top: 1rem;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__nav-button {
+    width: 100%;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    border-radius: $border-radius-md;
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.875rem;
+    position: relative;
+
+    // Icon positioning - left aligned
+    svg {
+      position: absolute;
+      left: 1rem;
+      flex-shrink: 0;
+    }
+
+    // Text centering - centered on full button width
+    span {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    &--active {
+      background-color: $color-primary;
+      color: $color-white;
+    }
+
+    &--inactive {
+      border-color: $color-gray-200;
+      color: inherit;
+
+      &:hover {
+        background-color: $color-gray-100;
+      }
+    }
+  }
+
+  &__footer {
+    padding: 2.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: $color-gray-400;
+  }
+
+  // Responsive breakpoints for sidebar
+  @media (max-width: $breakpoint-lg) {
+    &__navigation {
+      width: 17rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    &__navigation {
+      width: 14rem;
+    }
+    
+    &__header {
+      padding: 1rem;
+    }
+    
+    &__nav-buttons {
+      padding: 0 1rem;
+    }
+    
+    &__footer {
+      padding: 1rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    &__mobile-toggle {
+      display: block;
+    }
+
+    &__mobile-overlay {
+      display: block;
+    }
+
+    position: fixed;
+    left: -100%;
+    top: 0;
+    transition: left 0.3s ease-in-out;
+    z-index: 50;
+
+    &--mobile-open {
+      left: 0;
+    }
+
+    &__mini-bar {
+      width: 3rem;
+      padding: 1rem 0;
+    }
+    
+    &__navigation {
+      width: 10rem;
+    }
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__subtitle {
+      font-size: 0.75rem;
+    }
+    
+    &__nav-button {
+      font-size: 0.75rem;
+      padding: 0.375rem 0.75rem;
+    }
+  }
+}
+
+// Sidebar navigation - remove purple outline and add white background with shadow
+.sidebar__navigation {
+  background-color: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  outline: none !important;
+  
+  &:focus {
+    outline: none !important;
+    border: none !important;
+  }
+}
+
+// Company Header component
+.company-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  width: 100%;
+  height: auto;
+  max-width: 800px;
+  position: relative;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem ;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: left;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__button {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover .company-header__icon {
+      &--edit {
+        color: black;
+      }
+
+      &--delete {
+        color: $color-red-700;
+      }
+    }
+  }
+
+  &__icon {
+    &--back {
+      color: $color-gray-500;
+      position: absolute;
+      left: -3rem;
+    }
+
+    &--edit {
+      color: $color-gray-600;
+    }
+
+    &--delete {
+      color: $color-red-500;
+    }
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-md) {
+    &__title {
+      font-size: 1.25rem;
+    }
+    
+    &__button {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    &__title {
+      font-size: 1.125rem;
+    }
+    
+    &__actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// Details components (Organization & Contact)
+.details {
+  background-color: $color-white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  min-height: 192px;
+  border: 1px solid $color-gray-300;
+  box-shadow: $shadow-lg;
+
+  &__header {
+    width: 100%;
+    min-height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-weight: 600;
+    margin: 0;
+    text-align: left;
+  }
+
+  &__edit-button {
+    border: 1px solid $color-gray-200;
+    padding: 0.25rem 0.75rem;
+    border-radius: $border-radius-md;
+    font-size: 0.75rem;
+    color: #3b3b3b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: $color-white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-gray-100;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: $color-gray-700;
+    text-align: left;
+  }
+
+  &__field {
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+
+    &-label {
+      font-weight: 500;
+      color: $color-gray-500;
+      width: 26.67%;
+      flex-shrink: 0;
+    }
+
+    &-value {
+      color: $color-gray-700;
+      flex: 1;
+    }
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+    min-height: 160px;
+    
+    &__header {
+      margin-bottom: 0.75rem;
+    }
+    
+    &__content {
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 0.75rem;
+    min-height: 140px;
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__edit-button {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+    }
+    
+    &__content {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+// Photo Section component
+.photo-section {
+  background-color: $color-white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  border: 1px solid $color-gray-300;
+  box-shadow: $shadow-lg;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__add-button {
+    border: 1px solid $color-gray-200;
+    padding: 0.25rem 0.75rem;
+    border-radius: $border-radius-md;
+    font-size: 0.75rem;
+    display: flex;
+    color: #3b3b3b;
+    align-items: center;
+    gap: 0.25rem;
+    background: $color-white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-gray-100;
+    }
+  }
+
+  &__file-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__photos {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__photo {
+    position: relative;
+    width: calc(25% - 0.75rem);
+    min-width: 120px;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+
+  &__photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: $border-radius-md;
+  }
+
+  &__delete-button {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    padding: 0.25rem;
+    border: none;
+    cursor: pointer;
+    background-color: transparent
+  }
+
+  &__delete-icon {
+    color: $color-gray-600;
+    font-size: 0.75rem;
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+    
+    &__photos {
+      gap: 0.75rem;
+    }
+    
+    &__photo {
+      width: calc(50% - 0.375rem);
+      min-width: 100px;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 0.75rem;
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__add-button {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+    }
+    
+    &__photos {
+      gap: 0.5rem;
+    }
+    
+    &__photo {
+      width: calc(50% - 0.25rem);
+      min-width: 80px;
+    }
+  }
+}
+
+// Modal component
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  padding: 1rem;
+
+  &__content {
+    background-color: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: $color-gray-500;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-gray-800;
+    }
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-sm) {
+    padding: 0.5rem;
+    
+    &__content {
+      padding: 1rem;
+      max-width: 100%;
+    }
+  }
+}
+
+// Dialog components
+.dialog {
+  background-color: $color-white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+    margin-right: 1rem;
+    margin: 0;
+  }
+
+  &__input {
+    width: 100%;
+    border: 1px solid $color-gray-200;
+    border-radius: $border-radius-lg;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    color: $color-gray-800;
+    outline: none;
+
+    &:focus {
+      ring: 2px;
+      ring-color: $color-gray-200;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  &__button {
+    width: 48%;
+    font-weight: 600;
+    padding: 0.5rem;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &--cancel {
+      border: 1px solid $color-gray-200;
+      color: black;
+      background: $color-white;
+
+      &:hover {
+        background-color: $color-gray-100;
+      }
+    }
+
+    &--save {
+      background-color: $color-gray-800;
+      color: $color-white;
+      border: none;
+
+      &:hover {
+        background-color: $color-gray-700;
+      }
+    }
+  }
+}
+
+// Form elements
+.details__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.details__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    margin: 0;
+  }
+}
+
+// Organization Dialog component
+.organization-dialog {
+  background-color: $color-white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  min-height: 236px;
+  border: 2px solid #8b5cf6;
+  position: relative;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid $color-gray-200;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: $color-gray-800;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: $border-radius-md;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+
+    &--save {
+      background-color: $color-white !important;
+      color: $color-gray-600 !important;
+      border: 1px solid $color-gray-300 !important;
+
+      &:hover {
+        background-color: $color-gray-100 !important;
+      }
+    }
+
+    &--cancel {
+      background-color: $color-white !important;
+      color: $color-gray-600 !important;
+      border: 1px solid $color-gray-300 !important;
+
+      &:hover {
+        background-color: $color-gray-100 !important;
+      }
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+    min-height: 200px;
+    
+    &__row {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    &__label {
+      width: 120px;
+      min-width: 120px;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 0.75rem;
+    min-height: 180px;
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__field {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    &__label {
+      width: 100%;
+      min-width: auto;
+    }
+    
+    &__input {
+      width: 100%;
+    }
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &--full-width {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $color-gray-600;
+    margin: 0;
+    white-space: nowrap;
+    width: 160px;
+    min-width: 160px;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid $color-gray-300;
+    border-radius: $border-radius-md;
+    font-size: 0.875rem;
+    color: $color-gray-800;
+    background-color: $color-white;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-gray-400;
+      box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.1);
+    }
+  }
+
+  &__dropdown {
+    position: relative;
+    flex: 1;
+  }
+
+  &__dropdown-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid $color-gray-300;
+    border-radius: $border-radius-md;
+    font-size: 0.875rem;
+    color: $color-gray-800;
+    background-color: $color-white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: $color-gray-400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-gray-400;
+      box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.1);
+    }
+  }
+
+  &__dropdown-arrow {
+    font-size: 0.75rem;
+    color: $color-gray-500;
+    transition: transform 0.2s;
+  }
+
+  &__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: $color-white;
+    border: 1px solid $color-gray-300;
+    border-radius: $border-radius-md;
+    box-shadow: $shadow-lg;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 0.25rem;
+  }
+
+  &__dropdown-item {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 0.875rem;
+    color: $color-gray-800;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-gray-100;
+    }
+
+    &:first-child {
+      border-top-left-radius: $border-radius-md;
+      border-top-right-radius: $border-radius-md;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $border-radius-md;
+      border-bottom-right-radius: $border-radius-md;
+    }
+  }
+
+  &__dropdown-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: $color-gray-800;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-gray-100;
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+      appearance: none;
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid $color-gray-400;
+      border-radius: 0.25rem;
+      background-color: $color-white;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+
+      &:checked {
+        background-color: $color-white;
+        border-color: $color-gray-600;
+
+        &::after {
+          content: '✓';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          color: $color-gray-800;
+          font-size: 0.75rem;
+          font-weight: bold;
+          line-height: 1;
+        }
+      }
+
+      &:hover {
+        border-color: $color-gray-600;
+      }
+    }
+  }
+}
+
+// Contact Dialog component
+.contact-dialog {
+  background-color: $color-white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  min-height: 236px;
+  border: 2px solid #8b5cf6;
+  position: relative;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid $color-gray-200;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: $color-gray-800;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: $border-radius-md;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+
+    &--save {
+      background-color: $color-white !important;
+      color: $color-gray-600 !important;
+      border: 1px solid $color-gray-300 !important;
+
+      &:hover {
+        background-color: $color-gray-100 !important;
+      }
+    }
+
+    &--cancel {
+      background-color: $color-white !important;
+      color: $color-gray-600 !important;
+      border: 1px solid $color-gray-300 !important;
+
+      &:hover {
+        background-color: $color-gray-100 !important;
+      }
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $color-gray-600;
+    margin: 0;
+    white-space: nowrap;
+    width: 160px;
+    min-width: 160px;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid $color-gray-300;
+    border-radius: $border-radius-md;
+    font-size: 0.875rem;
+    color: $color-gray-800;
+    background-color: $color-white;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-gray-400;
+      box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.1);
+    }
+  }
+
+  // Responsive breakpoints
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+    min-height: 200px;
+    
+    &__label {
+      width: 120px;
+      min-width: 120px;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 0.75rem;
+    min-height: 180px;
+    
+    &__title {
+      font-size: 1rem;
+    }
+    
+    &__field {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    &__label {
+      width: 100%;
+      min-width: auto;
+    }
+    
+    &__input {
+      width: 100%;
+    }
+  }
+}
+
+// Loading state
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.125rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+// Additional responsive utilities
+@media (max-width: $breakpoint-sm) {
+  .loading {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+}
+
+// Ensure proper viewport meta tag behavior
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+}
+
+// Improve touch targets on mobile
+@media (max-width: $breakpoint-sm) {
+  button, 
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+} 
+
+// Dialog components - remove purple outline and add white background with shadow
+.contact-dialog,
+.organization-dialog {
+  background-color: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: none;
+  outline: none !important;
+  
+  &:focus {
+    outline: none !important;
+    border: none !important;
+  }
+  
+  &__button {
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Details and Photo Section components - remove purple outline and add white background with shadow
+.details,
+.photo-section {
+  background-color: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  outline: none !important;
+  
+  &:focus {
+    outline: none !important;
+    border: none !important;
+  }
+} 
+
+// Input field styling - regular, hovered, focused states
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"],
+textarea,
+select {
+  // Regular state
+  background-color: $color-white;
+  border: 1px solid #d1d5db;
+  border-radius: $border-radius-md;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: #6b7280;
+  }
+  
+  // Hovered state
+  &:hover {
+    border-color: #9ca3af;
+  }
+  
+  // Focused state
+  &:focus {
+    outline: none;
+    border-color: #35cdfd;
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+  }
+}
+
+// Dropdown selector styling - regular, hovered, focused states
+.dropdown,
+select,
+.organization-dialog__dropdown-button,
+.contact-dialog__dropdown-button {
+  position: relative;
+  background-color: $color-white;
+  border: 1px solid #d1d5db;
+  border-radius: $border-radius-md;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  // Hovered state
+  &:hover {
+    border-color: #9ca3af;
+  }
+  
+  // Focused state
+  &:focus {
+    outline: none;
+    border-color: #00bcd4;
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+  }
+}
+
+// Organization dialog dropdown arrow styling
+.organization-dialog__dropdown-arrow {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+  color: #6b7280;
+}
+
+.organization-dialog__dropdown-button:focus .organization-dialog__dropdown-arrow {
+  color: #35cdfd;
+} 
